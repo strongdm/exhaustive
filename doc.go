@@ -188,6 +188,35 @@ Descriptions:
 		default, the analyzer discovers enums defined in all
 		blocks.
 
+# Package-level directives
+
+The "//exhaustive:enforce" and "//exhaustive:ignore" directives can be placed
+on a package clause to apply to all switch statements and map literals in the
+package.
+
+To enforce exhaustive checking for an entire package, add "//exhaustive:enforce"
+to the package clause in any file in the package:
+
+	//exhaustive:enforce
+	package mypkg
+
+This is particularly useful in combination with the -explicit-exhaustive-switch
+or -explicit-exhaustive-map flags: it allows entire packages to opt in to
+exhaustive checking without annotating every switch or map individually.
+Individual switch statements or map literals within an enforced package can
+still be skipped using a per-statement "//exhaustive:ignore".
+
+To ignore exhaustive checking for an entire package, add "//exhaustive:ignore"
+to the package clause:
+
+	//exhaustive:ignore
+	package mypkg
+
+In non-explicit mode (the default), this skips checking for all switch
+statements and map literals in the package. Individual switch statements or
+map literals can still be checked by adding a per-statement
+"//exhaustive:enforce".
+
 # Skip analysis
 
 To skip analysis of a switch statement or a map literal, associate it with a

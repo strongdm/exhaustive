@@ -1,0 +1,2 @@
+//exhaustive:ignore
+package packageconflict

@@ -57,6 +57,7 @@ type switchConfig struct {
 	checkGenerated             bool
 	ignoreConstant             *regexp.Regexp // can be nil
 	ignoreType                 *regexp.Regexp // can be nil
+	packageDirective           packageDirective
 }
 
 // switchChecker returns a node visitor that checks exhaustiveness of
@@ -87,13 +88,20 @@ func switchChecker(pass *analysis.Pass, cfg switchConfig, generated boolCache, c
 			pass.Report(makeInvalidDirectiveDiagnostic(sw, err))
 		}
 
-		if !cfg.explicit && uDirectives.has(ignoreDirective) {
-			// Skip checking of this switch statement due to ignore
-			// comment. Still return true because there may be nested
-			// switch statements that are not to be ignored.
-			return true, resultIgnoreComment
+		enforced := uDirectives.has(enforceDirective) || cfg.packageDirective == packageDirectiveEnforce
+		ignored := uDirectives.has(ignoreDirective) || cfg.packageDirective == packageDirectiveIgnore
+
+		if ignored && !uDirectives.has(enforceDirective) {
+			if !cfg.explicit || enforced {
+				// Skip checking of this switch statement due to ignore
+				// directive (statement-level or package-level). A
+				// per-statement enforce directive overrides package-level
+				// ignore. Still return true because there may be nested
+				// switch statements that are not to be ignored.
+				return true, resultIgnoreComment
+			}
 		}
-		if cfg.explicit && !uDirectives.has(enforceDirective) {
+		if cfg.explicit && !enforced {
 			// Skip checking of this switch statement due to missing
 			// enforce comment.
 			return true, resultNoEnforceComment

@@ -11,10 +11,11 @@ import (
 
 // mapConfig is configuration for mapChecker.
 type mapConfig struct {
-	explicit       bool
-	checkGenerated bool
-	ignoreConstant *regexp.Regexp // can be nil
-	ignoreType     *regexp.Regexp // can be nil
+	explicit         bool
+	checkGenerated   bool
+	ignoreConstant   *regexp.Regexp // can be nil
+	ignoreType       *regexp.Regexp // can be nil
+	packageDirective packageDirective
 }
 
 // mapChecker returns a node visitor that checks for exhaustiveness of
@@ -82,13 +83,20 @@ func mapChecker(pass *analysis.Pass, cfg mapConfig, generated boolCache, comment
 			pass.Report(makeInvalidDirectiveDiagnostic(lit, err))
 		}
 
-		if !cfg.explicit && directives.has(ignoreDirective) {
-			// Skip checking of this map literal due to ignore
-			// comment. Still return true because there may be nested
-			// map literals that are not to be ignored.
-			return true, resultIgnoreComment
+		enforced := directives.has(enforceDirective) || cfg.packageDirective == packageDirectiveEnforce
+		ignored := directives.has(ignoreDirective) || cfg.packageDirective == packageDirectiveIgnore
+
+		if ignored && !directives.has(enforceDirective) {
+			if !cfg.explicit || enforced {
+				// Skip checking of this map literal due to ignore
+				// directive (statement-level or package-level). A
+				// per-statement enforce directive overrides package-level
+				// ignore. Still return true because there may be nested
+				// map literals that are not to be ignored.
+				return true, resultIgnoreComment
+			}
 		}
-		if cfg.explicit && !directives.has(enforceDirective) {
+		if cfg.explicit && !enforced {
 			return true, resultNoEnforceComment
 		}
 

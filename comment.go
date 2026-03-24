@@ -77,3 +77,40 @@ func (d directiveSet) validate() error {
 func fileCommentMap(fset *token.FileSet, file *ast.File) ast.CommentMap {
 	return ast.NewCommentMap(fset, file, file.Comments)
 }
+
+// packageDirective represents the package-level directive state.
+type packageDirective int
+
+const (
+	packageDirectiveNone    packageDirective = iota
+	packageDirectiveEnforce                  // //exhaustive:enforce on package clause
+	packageDirectiveIgnore                   // //exhaustive:ignore on package clause
+)
+
+// packageLevelDirective returns the package-level directive found on
+// package clauses across all files in the package. A directive on any
+// file's package clause applies to the entire package.
+func packageLevelDirective(files []*ast.File) (packageDirective, error) {
+	var out directiveSet
+	for _, file := range files {
+		if file.Doc == nil {
+			continue
+		}
+		d, err := parseDirectives([]*ast.CommentGroup{file.Doc})
+		if err != nil {
+			return packageDirectiveNone, err
+		}
+		out |= d
+	}
+	if err := out.validate(); err != nil {
+		return packageDirectiveNone, err
+	}
+	switch {
+	case out.has(enforceDirective):
+		return packageDirectiveEnforce, nil
+	case out.has(ignoreDirective):
+		return packageDirectiveIgnore, nil
+	default:
+		return packageDirectiveNone, nil
+	}
+}
