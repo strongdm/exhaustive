@@ -14,7 +14,7 @@ exhaustiveness of keys in map literals whose key type is an enum.
 Command:
 
 ```
-go install github.com/nishanths/exhaustive/cmd/exhaustive@latest
+go install github.com/strongdm/exhaustive/cmd/exhaustive@latest
 
 exhaustive [flags] [packages]
 ```
@@ -25,9 +25,9 @@ For available flags, refer to the [Flags][godoc-flags] section in godoc or run
 Package:
 
 ```
-go get github.com/nishanths/exhaustive
+go get github.com/strongdm/exhaustive
 
-import "github.com/nishanths/exhaustive"
+import "github.com/strongdm/exhaustive"
 ```
 
 The `exhaustive.Analyzer` variable follows guidelines in the
@@ -96,9 +96,9 @@ calc.go:14:9: missing keys in map of key type token.Token: token.Remainder
 Issues and changes are welcome. Please discuss substantial changes in an issue
 first.
 
-[godoc]: https://pkg.go.dev/github.com/nishanths/exhaustive
-[godoc-svg]: https://pkg.go.dev/badge/github.com/nishanths/exhaustive.svg
-[godoc-doc]: https://pkg.go.dev/github.com/nishanths/exhaustive#section-documentation
-[godoc-flags]: https://pkg.go.dev/github.com/nishanths/exhaustive#hdr-Flags
+[godoc]: https://pkg.go.dev/github.com/strongdm/exhaustive
+[godoc-svg]: https://pkg.go.dev/badge/github.com/strongdm/exhaustive.svg
+[godoc-doc]: https://pkg.go.dev/github.com/strongdm/exhaustive#section-documentation
+[godoc-flags]: https://pkg.go.dev/github.com/strongdm/exhaustive#hdr-Flags
 [xanalysis]: https://pkg.go.dev/golang.org/x/tools/go/analysis
-[changelog]: https://github.com/nishanths/exhaustive/wiki/CHANGELOG
+[changelog]: https://github.com/strongdm/exhaustive/wiki/CHANGELOG

@@ -1,4 +1,4 @@
-module github.com/nishanths/exhaustive
+module github.com/strongdm/exhaustive
 
 go 1.25.0
 

@@ -1,6 +1,6 @@
 package calc
 
-import "github.com/nishanths/exhaustive/testdata/xxx/token"
+import "github.com/strongdm/exhaustive/testdata/xxx/token"
 
 func f(t token.Token) {
 	switch t {

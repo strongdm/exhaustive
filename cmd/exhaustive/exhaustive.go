@@ -1,5 +1,5 @@
 // Command exhaustive is a command line interface for the exhaustive
-// package at github.com/nishanths/exhaustive.
+// package at github.com/strongdm/exhaustive.
 //
 // # Usage
 //
@@ -7,7 +7,7 @@
 package main
 
 import (
-	"github.com/nishanths/exhaustive"
+	"github.com/strongdm/exhaustive"
 	"golang.org/x/tools/go/analysis/singlechecker"
 )
 

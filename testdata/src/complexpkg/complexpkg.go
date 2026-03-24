@@ -12,7 +12,7 @@ import (
 )
 
 func useComplexPackages() {
-	// see issue 25: https://github.com/nishanths/exhaustive/issues/25
+	// see issue 25: https://github.com/strongdm/exhaustive/issues/25
 	var (
 		_ elliptic.Curve
 		_ tls.Conn
