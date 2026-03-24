@@ -27,7 +27,7 @@ Package:
 ```
 go get github.com/strongdm/exhaustive
 
-import "github.com/strongdm/exhaustive"
+import sdmexhaustive "github.com/strongdm/exhaustive"
 ```
 
 The `exhaustive.Analyzer` variable follows guidelines in the

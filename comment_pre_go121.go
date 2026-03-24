@@ -1,6 +1,6 @@
 //go:build !go1.21
 
-package exhaustive
+package sdmexhaustive
 
 import (
 	"go/ast"

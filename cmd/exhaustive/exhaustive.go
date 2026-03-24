@@ -7,8 +7,8 @@
 package main
 
 import (
-	"github.com/strongdm/exhaustive"
+	sdmexhaustive "github.com/strongdm/exhaustive"
 	"golang.org/x/tools/go/analysis/singlechecker"
 )
 
-func main() { singlechecker.Main(exhaustive.Analyzer) }
+func main() { singlechecker.Main(sdmexhaustive.Analyzer) }

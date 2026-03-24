@@ -242,4 +242,4 @@ To ignore specific types, specify the -ignore-enum-types flag:
 [block]: https://golang.org/ref/spec#Blocks
 [BasicKind]: https://pkg.go.dev/go/types#BasicKind
 */
-package exhaustive
+package sdmexhaustive

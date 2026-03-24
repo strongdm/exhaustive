@@ -1,4 +1,4 @@
-package exhaustive
+package sdmexhaustive
 
 import "golang.org/x/tools/go/analysis"
 
