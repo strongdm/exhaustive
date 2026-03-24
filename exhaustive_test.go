@@ -75,6 +75,34 @@ func TestExhaustive(t *testing.T) {
 		fExplicitExhaustiveMap = true
 	})
 
+	// Package-level enforce: //exhaustive:enforce on package clause.
+	// In explicit mode, package-level enforce activates checking for all
+	// switches/maps in the package; per-switch ignore overrides.
+	runTest(t, "package-enforce/explicit-switch/...", func() {
+		fExplicitExhaustiveSwitch = true
+		fExplicitExhaustiveMap = true
+	})
+	runTest(t, "package-enforce/explicit-map/...", func() {
+		fExplicitExhaustiveSwitch = true
+		fExplicitExhaustiveMap = true
+	})
+	// In implicit mode, package-level enforce is redundant but harmless.
+	runTest(t, "package-enforce/implicit-switch/...")
+	// Without package-level enforce, explicit mode requires per-switch enforce.
+	runTest(t, "package-enforce/no-directive/...", func() {
+		fExplicitExhaustiveSwitch = true
+		fExplicitExhaustiveMap = true
+	})
+
+	// Package-level ignore: //exhaustive:ignore on package clause.
+	// In non-explicit mode, package-level ignore skips all switches/maps
+	// in the package; per-statement enforce overrides.
+	runTest(t, "package-ignore/implicit-switch/...")
+	runTest(t, "package-ignore/implicit-map/...")
+
+	// Conflicting package-level directives should produce a diagnostic.
+	runTest(t, "package-conflict/...")
+
 	// To satisfy exhaustiveness, it is sufficient for each unique constant
 	// value of the members to be listed, not each member by name.
 	runTest(t, "duplicate-enum-value/...")

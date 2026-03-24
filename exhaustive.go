@@ -115,6 +115,12 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	generated := boolCache{compute: isGeneratedFile}
 	comments := commentCache{compute: fileCommentMap}
 
+	pkgDir, pkgDirErr := packageLevelDirective(pass.Files)
+	if pkgDirErr != nil {
+		// Report the error on the first file's package clause.
+		pass.Report(makeInvalidDirectiveDiagnostic(pass.Files[0], pkgDirErr))
+	}
+
 	// NOTE: should not share the same inspect.WithStack call for different
 	// program elements: the visitor function for a program element may
 	// exit traversal early, but this shouldn't affect traversal for
@@ -129,16 +135,18 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				checkGenerated:             fCheckGenerated,
 				ignoreConstant:             fIgnoreEnumMembers.re,
 				ignoreType:                 fIgnoreEnumTypes.re,
+				packageDirective:           pkgDir,
 			}
 			checker := switchChecker(pass, conf, generated, comments)
 			inspect.WithStack([]ast.Node{&ast.SwitchStmt{}}, toVisitor(checker))
 
 		case elementMap:
 			conf := mapConfig{
-				explicit:       fExplicitExhaustiveMap,
-				checkGenerated: fCheckGenerated,
-				ignoreConstant: fIgnoreEnumMembers.re,
-				ignoreType:     fIgnoreEnumTypes.re,
+				explicit:         fExplicitExhaustiveMap,
+				checkGenerated:   fCheckGenerated,
+				ignoreConstant:   fIgnoreEnumMembers.re,
+				ignoreType:       fIgnoreEnumTypes.re,
+				packageDirective: pkgDir,
 			}
 			checker := mapChecker(pass, conf, generated, comments)
 			inspect.WithStack([]ast.Node{&ast.CompositeLit{}}, toVisitor(checker))
